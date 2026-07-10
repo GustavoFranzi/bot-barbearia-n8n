@@ -1,5 +1,9 @@
 # 🪒 Bot de Agendamento para Barbearia (n8n + Telegram + Google Sheets) --- v1.1
 
+## Workflow
+
+![Workflow](docs/Workflow.png)
+
 Automação de atendimento e agendamento via Telegram construída em
 **n8n**. O cliente interage com um fluxo conversacional baseado em
 **máquina de estados**, escolhe um serviço, seleciona um horário
