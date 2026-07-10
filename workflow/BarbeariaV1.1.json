@@ -1,0 +1,1808 @@
+{
+  "name": "Barbearia",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2080,
+        -464
+      ],
+      "id": "ac3685e1-e619-4a40-acf5-f68d2f9d5cd1",
+      "name": "Telegram Trigger",
+      "webhookId": "6bccf5cb-a31a-40ae-aed5-dc0afa793588",
+      "credentials": {
+        "telegramApi": {
+          "id": "uhk5IfiF9S0QInQX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        32,
+        -880
+      ],
+      "id": "940479d8-5c68-4b8f-b6a8-716ca753bbe5",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Chat_id",
+              "lookupValue": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1328,
+        -448
+      ],
+      "id": "16b64118-9f76-4579-a40e-36ec2bc9a013",
+      "name": "Chat_Id cliente",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ca883be8-ede6-4050-af95-58f758ab4747",
+              "leftValue": "={{ $json.Chat_id }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1104,
+        -448
+      ],
+      "id": "18f73a00-9960-431d-85f2-dbc4a9aeffa3",
+      "name": "Busca_cliente"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "aguardando_serviço",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "67460be1-d248-4a0b-942c-ec3c07910989"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "serviço"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4369ee0a-b6ae-47e2-a9b4-a94d0fa9213c",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "aguardando_horario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "horario "
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a993ceea-14a8-4b8e-8e06-e1f6a4bf0356",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "aguardando_nome",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nome"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -688,
+        -480
+      ],
+      "id": "af75a465-6c7d-4bb6-8120-e2098249514a",
+      "name": "Direcionar_estados"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8bb5b41c-1b80-4225-ae5e-ccc2925ee4d8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Corte"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "74ffeb8a-f20c-4268-a208-d57f76316eb4",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Barba"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8569f542-96e4-44ce-ac1d-2f5049cb4f47",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Corte + Barba"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -416,
+        -880
+      ],
+      "id": "bfd91a02-a168-4d22-acad-7604676105ae",
+      "name": "Selecionar_serviços"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "aguardando_horario",
+            "Serviço": "Corte",
+            "Ultima_atualização": "={{ $json['Ultima_atualização'] }}",
+            "Chat_id": "={{ $json.Chat_id }}"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -192,
+        -1056
+      ],
+      "id": "385f5d7a-4b20-45d2-a80c-75d0164bc3bf",
+      "name": "Atualiza_planilha_Corte",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $('Chat_Id cliente').item.json.Chat_id }}",
+            "Estado": "agurdando_horario",
+            "Serviço": "Barba",
+            "Ultima_atualização": "={{ $('Chat_Id cliente').item.json['Ultima_atualização'] }}"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -192,
+        -864
+      ],
+      "id": "690ed508-de89-4138-b956-0770bf45a83f",
+      "name": "Atualiza_planilha_Barba",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "Estado": "aguardando_horario",
+            "Serviço": "Barba + corte",
+            "Ultima_atualização": "={{ $('Chat_Id cliente').item.json['Ultima_atualização'] }}"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -192,
+        -672
+      ],
+      "id": "e733c367-262d-4225-9a71-c054cff32d10",
+      "name": "Atualiza_planilha_Corte+Barba",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 460468502,
+          "mode": "list",
+          "cachedResultName": "Horários",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=460468502"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Disponível",
+              "lookupValue": "Sim"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        -864
+      ],
+      "id": "c03b80f7-4458-4fed-af3f-146e3013ad57",
+      "name": "Consulta_horários ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const horarios = $input.all();\n\nconst mensagem = horarios\n  .map((h, i) => `${i + 1} - ${h.json.Horário}`)\n  .join('\\n');\n\nreturn [{\n  json: {\n    mensagem\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -864
+      ],
+      "id": "eb426530-28ad-4fe3-928d-44bf62fcf7b5",
+      "name": "Filtra_hoŕarios_disponíveis"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Horários disponíveis:\n{{ $json.mensagem }}\nDigite o horário como aparece nas opções, exemplo: 9:00",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        -864
+      ],
+      "id": "ada2a67c-6c8d-41cc-9e58-9e3268a42115",
+      "name": "Envia_horários_disponíveis",
+      "webhookId": "09670d85-5fb8-4cef-ae74-431d070444ca",
+      "credentials": {
+        "telegramApi": {
+          "id": "uhk5IfiF9S0QInQX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Agendamentos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Servico": "={{ $json['Serviço'] }}",
+            "Data": "={{ $now }}",
+            "Horario": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "status": "aguardando_horario",
+            "Chat_id": "={{ $json.Chat_id }}"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Servico",
+              "displayName": "Servico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Horario",
+              "displayName": "Horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -304,
+        -400
+      ],
+      "id": "9c04bdb0-e842-4196-a840-184c18611f7e",
+      "name": "registra_horário",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $json.result.chat.id }}",
+            "Estado": "aguardando_nome"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        144,
+        -400
+      ],
+      "id": "9e097775-8932-4551-8a0a-02ef80b153eb",
+      "name": "Atualiza_estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Agendamentos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "status": "confirmado",
+            "Chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Servico",
+              "displayName": "Servico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Horario",
+              "displayName": "Horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -304,
+        -112
+      ],
+      "id": "bae18353-a7d6-41e2-b0a3-d2acf184bfd7",
+      "name": "Atuliza_nome",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "Estado": "aguardando_serviço",
+            "Serviço": "=",
+            "Ultima_atualização": "={{$now}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1184,
+        16
+      ],
+      "id": "e236c5ed-e128-4393-91e8-c50bfe397d3b",
+      "name": "Atualiza_Conversa_com_chatID",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=💈 Bem-vindo à Barbearia!  \nEscolha um dos serviços abaixo digitando o número correspondente:  \n1️⃣ Corte \n\n2️⃣ Barba \n\n3️⃣ Corte + Barba  \n\nDigite apenas o número da opção desejada.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -960,
+        16
+      ],
+      "id": "2b312abd-b947-4de8-9a69-4649edb0d65c",
+      "name": "Mensagem_com_serviços",
+      "webhookId": "41489948-6a9d-472b-ae05-49369abce301",
+      "credentials": {
+        "telegramApi": {
+          "id": "uhk5IfiF9S0QInQX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Agendamentos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -112
+      ],
+      "id": "7fbb3241-c407-438b-9aa9-44b62fbb7504",
+      "name": "Retorna_dados_agendamentos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=Agendamento confirmado!\n\nNome:{{ $json.Nome }}\nServiço: {{ $('Chat_Id cliente').item.json['Serviço'] }}\nHorário:{{ $json.Horario }}\n\nObrigado! Esperamos você.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -112
+      ],
+      "id": "0b547ce1-5992-431d-8fe7-cd8c712cc2e4",
+      "name": "Mensagem_confirmação_agendamento",
+      "webhookId": "ecbdd988-8a6a-4455-ad26-12e53bfb2a8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "uhk5IfiF9S0QInQX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Agendamentos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "Servico": "=",
+            "status": "="
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Servico",
+              "displayName": "Servico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Horario",
+              "displayName": "Horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        -864
+      ],
+      "id": "82d0e645-72d2-44c7-80a8-26b67513199d",
+      "name": "Retorna_chatID",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Serviço\n",
+        "height": 576,
+        "width": 1760
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -1072
+      ],
+      "id": "f262ee16-672d-48b6-b500-06ec520dfb47",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Horário\n",
+        "height": 192,
+        "width": 768,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -416
+      ],
+      "id": "3bf3fc7c-7e2e-4a55-837f-227a2ad72be2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Nome\n",
+        "height": 208,
+        "width": 944,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -128
+      ],
+      "id": "c2564dbb-9537-4ae3-96b4-8307834bb0c7",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "=✅ Horário reservado!\n\nHorário: 🕐 {{ $json.Horario }}\n\nAgora informe seu nome completo para confirmar o agendamento.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        -400
+      ],
+      "id": "aa869a24-bd1b-48ec-a667-d39016a41ec5",
+      "name": "Confirma_horário_pede_nome",
+      "webhookId": "83b4d7df-6187-48e3-8d4a-f511db76de5d",
+      "credentials": {
+        "telegramApi": {
+          "id": "uhk5IfiF9S0QInQX",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Novo Cliente\n",
+        "height": 240,
+        "width": 624,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1344,
+        -32
+      ],
+      "id": "1441a3df-9659-4f7a-93b3-df3ee3ab29b9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "88fe261b-f360-4bd6-9087-2ad1cf925318",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1616,
+        -464
+      ],
+      "id": "1caf429b-fd32-48a5-acd9-cce914d62949",
+      "name": "tratamento_/start"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1648,
+        -256
+      ],
+      "id": "86887263-f457-463a-9222-64890fe30021",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e9088d37-c22e-4dc3-9b3c-47c7909eda41",
+              "leftValue": "={{ $json.message.chat.type }}",
+              "rightValue": "private",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1904,
+        -464
+      ],
+      "id": "55117fdc-92c2-4d8a-8919-780c41910128",
+      "name": "Tratamento_somente_mensagens_privadas"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc",
+          "mode": "list",
+          "cachedResultName": "Banco_dados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1202426323,
+          "mode": "list",
+          "cachedResultName": "Conversas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DBGc07xkFHm3WTGPsDw3PlNRxT8Cvl1ob4cUS3sseGc/edit#gid=1202426323"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Chat_id": "={{ $json.result.chat.id }}",
+            "Estado": "confirmado"
+          },
+          "matchingColumns": [
+            "Chat_id"
+          ],
+          "schema": [
+            {
+              "id": "Chat_id",
+              "displayName": "Chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Serviço",
+              "displayName": "Serviço",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ultima_atualização",
+              "displayName": "Ultima_atualização",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        -112
+      ],
+      "id": "e6db998b-3cd0-4281-9ed2-b266b03466da",
+      "name": "Atualiza_estado1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YhSEbOC8VtBQ3p2O",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Tratamento_somente_mensagens_privadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Retorna_chatID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat_Id cliente": {
+      "main": [
+        [
+          {
+            "node": "Busca_cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca_cliente": {
+      "main": [
+        [
+          {
+            "node": "Direcionar_estados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualiza_Conversa_com_chatID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Direcionar_estados": {
+      "main": [
+        [
+          {
+            "node": "Selecionar_serviços",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "registra_horário",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atuliza_nome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Selecionar_serviços": {
+      "main": [
+        [
+          {
+            "node": "Atualiza_planilha_Corte",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualiza_planilha_Barba",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualiza_planilha_Corte+Barba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza_planilha_Corte": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza_planilha_Barba": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Atualiza_planilha_Corte+Barba": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Consulta_horários ": {
+      "main": [
+        [
+          {
+            "node": "Filtra_hoŕarios_disponíveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtra_hoŕarios_disponíveis": {
+      "main": [
+        [
+          {
+            "node": "Envia_horários_disponíveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registra_horário": {
+      "main": [
+        [
+          {
+            "node": "Confirma_horário_pede_nome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atuliza_nome": {
+      "main": [
+        [
+          {
+            "node": "Retorna_dados_agendamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza_Conversa_com_chatID": {
+      "main": [
+        [
+          {
+            "node": "Mensagem_com_serviços",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem_com_serviços": {
+      "main": [
+        []
+      ]
+    },
+    "Retorna_dados_agendamentos": {
+      "main": [
+        [
+          {
+            "node": "Mensagem_confirmação_agendamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retorna_chatID": {
+      "main": [
+        [
+          {
+            "node": "Consulta_horários ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirma_horário_pede_nome": {
+      "main": [
+        [
+          {
+            "node": "Atualiza_estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tratamento_/start": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Chat_Id cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento_somente_mensagens_privadas": {
+      "main": [
+        [
+          {
+            "node": "tratamento_/start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem_confirmação_agendamento": {
+      "main": [
+        [
+          {
+            "node": "Atualiza_estado1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "24d34bd4-d275-4629-b54f-262b409770d8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "402c9efdf3da03b0dcfc127747dd4bf309235e2367de41d683cd9e515090276e"
+  },
+  "nodeGroups": [],
+  "id": "K3UDC8I0uvdSEurT",
+  "tags": []
+}
