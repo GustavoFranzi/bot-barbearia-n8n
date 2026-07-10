@@ -9,11 +9,11 @@ Automação de atendimento e agendamento via Telegram construída em
 **máquina de estados**, escolhe um serviço, seleciona um horário
 disponível e confirma o agendamento, sem intervenção humana.
 
-## Demonstração
+## 🎥 Demonstração
 
-O vídeo completo de funcionamento está disponível em:
+O vídeo completo de funcionamento está disponível no Google Drive.
 
-- `docs/Barbearia.mp4`
+▶️ [Assistir à demonstração](https://drive.google.com/file/d/1gh8qHuMEehRAzfhUXe8f-DIT04K2Qk6D/view?usp=sharing)
 
 ------------------------------------------------------------------------
 
